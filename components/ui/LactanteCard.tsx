@@ -1,12 +1,11 @@
-import React, { useState } from 'react'; // Importación de React y el hook useState
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native'; // Importación de componentes de React Native
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 
-// Componente principal LactanteCard
 export default function LactanteCard({ lactante, darkTheme }) {
-  const [isExpanded, setIsExpanded] = useState(false); // Estado para determinar si la tarjeta está expandida
-  const [scaleValue] = useState(new Animated.Value(1)); // Estado para animar el escalado de la tarjeta
+  const [isExpanded, setIsExpanded] = useState(false); // Estado de expansión
+  const [scaleValue] = useState(new Animated.Value(1)); // Animación de escalado
 
-  // Manejar cuando se presiona el botón
+  // Animaciones de toque
   const handlePressIn = () => {
     Animated.spring(scaleValue, {
       toValue: 0.95,
@@ -14,7 +13,6 @@ export default function LactanteCard({ lactante, darkTheme }) {
     }).start();
   };
 
-  // Manejar cuando se suelta el botón
   const handlePressOut = () => {
     Animated.spring(scaleValue, {
       toValue: 1,
@@ -23,22 +21,22 @@ export default function LactanteCard({ lactante, darkTheme }) {
     }).start();
   };
 
-  // Manejar el cambio de estado expandido
+  // Control de expansión del componente
   const handleToggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // Obtener la valoración nutricional basada en el percentil
-  const getValoracionNutricional = (percentil) => {
-    if (percentil < 10) return 'Delgado';
-    if (percentil <= 90) return 'Eutrófico';
-    return 'Obeso';
+  // Color del borde según el sexo
+  const getBorderColor = () => {
+    if (lactante.sexo === 'femenino') return '#FF69B4'; // Rosa
+    if (lactante.sexo === 'masculino') return '#ADD8E6'; // Azul
+    return '#ddd'; // Color por defecto
   };
 
-  // Estilos de la tarjeta
+  // Estilo dinámico de la tarjeta
   const cardStyle = {
     transform: [{ scale: scaleValue }],
-    borderColor: lactante.genero === 'femenino' ? '#FF69B4' : '#ADD8E6',
+    borderColor: getBorderColor(),
     borderWidth: 2,
   };
 
@@ -49,37 +47,65 @@ export default function LactanteCard({ lactante, darkTheme }) {
         onPressOut={handlePressOut}
         onPress={handleToggleExpand}
       >
+        {/* Encabezado */}
         <View style={styles.header}>
-          <Text style={[styles.nombre, darkTheme && styles.nombreDark]}>{`${lactante.nombre} ${lactante.apellidos}`}</Text>
-          <Text style={[styles.consultorio, darkTheme && styles.consultorioDark]}>{lactante.consultorio}</Text>
+          <Text style={[styles.nombre, darkTheme && styles.nombreDark]}>
+            {lactante.nombreCompleto || 'Nombre no disponible'}
+          </Text>
+          <Text style={[styles.consultorio, darkTheme && styles.consultorioDark]}>
+            {lactante.consultorio ? `Consultorio ${lactante.consultorio}` : 'Consultorio'}
+          </Text>
         </View>
+        {/* Detalles principales */}
         <View style={styles.row}>
-          <Text style={[styles.text, darkTheme && styles.textDark]}>Edad: {lactante.edad} (F.N: {lactante.fechaNacimiento})</Text>
+          <Text style={[styles.text, darkTheme && styles.textDark]}>
+            Edad: {lactante.edad} (F.N: {lactante.fechaNacimiento})
+          </Text>
           <Text style={[styles.text, darkTheme && styles.textDark]}>Tel: {lactante.telefono}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={[styles.text, darkTheme && styles.textDark]}>{'\u25CF'} Último control: {lactante.ultimoCtrl}</Text>
-          <Text style={[styles.text, darkTheme && styles.textDark]}>{'\u25CB'} Próximo control: {lactante.proximoCtrl}</Text>
+          <Text style={[styles.text, darkTheme && styles.textDark]}>
+            {'\u25CF'} Último control: {lactante.ultimoCtrl}
+          </Text>
+          <Text style={[styles.text, darkTheme && styles.textDark]}>
+            {'\u25CB'} Próximo control: {lactante.proximoCtrl}
+          </Text>
         </View>
-        <Text style={[styles.text, darkTheme && styles.textDark, styles.valoracionNutricional]}>VN: {getValoracionNutricional(lactante.percentilPesoTalla)}</Text>
+        <Text style={[styles.text, darkTheme && styles.textDark, styles.valoracionNutricional]}>
+          VN: {lactante.percentilPesoTalla}
+        </Text>
 
+        {/* Detalles expandidos */}
         {isExpanded && (
           <>
-            <Text style={[styles.text, darkTheme && styles.textDark]}>Vacunas: {lactante.vacunas}%</Text>
+            <Text style={[styles.text, darkTheme && styles.textDark]}>
+              Vacunas: {lactante.vacunas}%
+            </Text>
             <View style={styles.row}>
               <Text style={[styles.text, darkTheme && styles.textDark]}>P: {lactante.peso}</Text>
-              <Text style={[styles.text, darkTheme && styles.textDark]}>P/T: {lactante.percentilPesoTalla}</Text>
+              <Text style={[styles.text, darkTheme && styles.textDark]}>
+                P/T: {lactante.percentilPesoTalla}
+              </Text>
             </View>
             <View style={styles.row}>
               <Text style={[styles.text, darkTheme && styles.textDark]}>T: {lactante.talla}</Text>
-              <Text style={[styles.text, darkTheme && styles.textDark]}>T/E: {lactante.percentilTallaEdad}</Text>
+              <Text style={[styles.text, darkTheme && styles.textDark]}>
+                T/E: {lactante.percentilTallaEdad}
+              </Text>
             </View>
             <View style={styles.row}>
               <Text style={[styles.text, darkTheme && styles.textDark]}>CC: {lactante.cc}</Text>
-              <Text style={[styles.text, darkTheme && styles.textDark]}>P/E: {lactante.percentilPesoEdad}</Text>
+              <Text style={[styles.text, darkTheme && styles.textDark]}>
+                P/E: {lactante.percentilPesoEdad}
+              </Text>
             </View>
-            <Text style={[styles.text, darkTheme && styles.textDark]}>Alimentación: {lactante.tipoAlimentacion}</Text>
-            <Text style={[styles.text, darkTheme && styles.textDark]}>DBPS: Lactante {getValoracionNutricional(lactante.percentilPesoTalla)}, Grupo de riesgo {lactante.grupoRiesgo}, {lactante.tipoAlimentacion}, {lactante.familiaFuncional}</Text>
+            <Text style={[styles.text, darkTheme && styles.textDark]}>
+              Alimentación: {lactante.tipoAlimentacion}
+            </Text>
+            <Text style={[styles.text, darkTheme && styles.textDark]}>
+              DBPS: Lactante Grupo de riesgo {lactante.grupoRiesgo}, {lactante.tipoAlimentacion},{' '}
+              {lactante.familiaFuncional}
+            </Text>
             <TouchableOpacity style={[styles.button, darkTheme && styles.buttonDark]}>
               <Text style={styles.buttonText}>Realizar control</Text>
             </TouchableOpacity>
@@ -161,6 +187,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 
 
 

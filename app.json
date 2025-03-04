@@ -33,7 +33,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true
@@ -45,6 +46,7 @@
       "eas": {
         "projectId": "7665c1ff-8536-4f05-9731-c9f17da8c9f3"
       }
-    }
+    },
+    "owner": "davidv97"
   }
 }
