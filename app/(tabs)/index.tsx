@@ -1,74 +1,108 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Calendario from '@/components/ui/Calendario';
+import Header from '@/components/ui/Header';
+import Notificaciones from '@/components/ui/Notificaciones';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+interface Lactante {
+  nombre: string;
+  apellidos: string;
+  fechaNacimiento: string;
+  peso: string;
+  talla: string;
+  cc: string;
+  edad: string;
+  percentilPesoTalla: number;
+  percentilTallaEdad: number;
+  percentilPesoEdad: number;
+  vacunas: number;
+  telefono: string;
+  ultimoCtrl: string;
+  proximoCtrl: string;
+  genero: string;
+  consultorio: string;
+  grupoRiesgo: number;
+  tipoAlimentacion: string;
+  familiaFuncional: string;
+}
 
-export default function HomeScreen() {
+const lactantes: Lactante[] = [
+  {
+    nombre: 'Valentina',
+    apellidos: 'González Pérez',
+    fechaNacimiento: '2021-11-15',
+    peso: '5.2kg',
+    talla: '58cm',
+    cc: '39cm',
+    edad: '3m',
+    percentilPesoTalla: 50,
+    percentilTallaEdad: 60,
+    percentilPesoEdad: 50,
+    vacunas: 80,
+    telefono: '+53 50123456',
+    ultimoCtrl: '2025-01-10',
+    proximoCtrl: '2025-02-10',
+    genero: 'femenino',
+    consultorio: 'Consultorio 1',
+    grupoRiesgo: 2,
+    tipoAlimentacion: 'Lactancia materna exclusiva',
+    familiaFuncional: 'Funcional',
+  },
+  {
+    nombre: 'Matías',
+    apellidos: 'Fernández Gómez',
+    fechaNacimiento: '2021-10-10',
+    peso: '6.0kg',
+    talla: '60cm',
+    cc: '40cm',
+    edad: '4m',
+    percentilPesoTalla: 75,
+    percentilTallaEdad: 80,
+    percentilPesoEdad: 75,
+    vacunas: 60,
+    telefono: '+53 50123457',
+    ultimoCtrl: '2025-01-15',
+    proximoCtrl: '2025-02-15',
+    genero: 'masculino',
+    consultorio: 'Consultorio 2',
+    grupoRiesgo: 3,
+    tipoAlimentacion: 'Lactancia materna y fórmula',
+    familiaFuncional: 'No funcional',
+  },
+];
+
+export default function HomeScreen(): JSX.Element {
+  const [busqueda, setBusqueda] = useState<string>('');
+  const [darkTheme, setDarkTheme] = useState<boolean>(false);
+
+  const toggleTheme = () => setDarkTheme(!darkTheme);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={[styles.container, darkTheme && styles.containerDark]}>
+        <Header setBusqueda={setBusqueda} darkTheme={darkTheme} toggleTheme={toggleTheme} />
+        <ScrollView style={{ flex: 1 }}>
+          <Notificaciones />
+          <Calendario darkTheme={darkTheme} />
+        </ScrollView>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  containerDark: {
+    backgroundColor: '#000',
+    flex: 1,
   },
 });
