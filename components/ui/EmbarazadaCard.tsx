@@ -3,21 +3,19 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native
 import { FontAwesome } from '@expo/vector-icons';
 
 interface Embarazada {
-  nombre: string;
-  apellidos: string;
+  nombreCompleto: string;
   fechaNacimiento: string;
-  edadGestacional: string;
-  fechaUltimaMenstruacion: string;
-  telefono: string;
+  peso: string;
+  talla: string;
+  dbps: string; // Nuevo campo para DBPS
+  telefono: string; // Número de teléfono
+  consultorio: string; // Consultorio
+  edad: number;
+  vacunas: string[];
   ultimoCtrl: string;
   proximoCtrl: string;
-  consultorio: string;
-  // Datos adicionales que son relevantes en el control obstétrico
-  peso?: string;                // Peso actual
-  presionArterial?: string;      // Presión arterial
-  alturaUterina?: string;        // Altura uterina
-  fechaPartoProbable?: string;   // Fecha probable de parto
-  observaciones?: string;        // Observaciones del examen
+  grupoRiesgo: number;
+  au: number;
 }
 
 interface EmbarazadaCardProps {
@@ -64,16 +62,13 @@ export default function EmbarazadaCard({ embarazada, darkTheme }: EmbarazadaCard
       >
         <View style={styles.header}>
           <Text style={[styles.nombre, darkTheme && styles.nombreDark]}>
-            {embarazada.nombre} {embarazada.apellidos}
+            {embarazada.nombreCompleto}
           </Text>
           <Text style={[styles.consultorio, darkTheme && styles.consultorioDark]}>
             {embarazada.consultorio}
           </Text>
         </View>
         <View style={styles.row}>
-          <Text style={[styles.text, darkTheme && styles.textDark]}>
-            Edad gest.: {embarazada.edadGestacional}
-          </Text>
           <Text style={[styles.text, darkTheme && styles.textDark]}>
             Tel: {embarazada.telefono}
           </Text>
@@ -82,9 +77,7 @@ export default function EmbarazadaCard({ embarazada, darkTheme }: EmbarazadaCard
           <Text style={[styles.text, darkTheme && styles.textDark]}>
             F.N.: {embarazada.fechaNacimiento}
           </Text>
-          <Text style={[styles.text, darkTheme && styles.textDark]}>
-            FUM: {embarazada.fechaUltimaMenstruacion}
-          </Text>
+
         </View>
         <View style={styles.row}>
           <Text style={[styles.text, darkTheme && styles.textDark]}>
@@ -93,38 +86,17 @@ export default function EmbarazadaCard({ embarazada, darkTheme }: EmbarazadaCard
         </View>
         {isExpanded && (
           <>
-            {embarazada.peso && (
+
+            <View style={styles.row}>
+              <Text style={[styles.text, darkTheme && styles.textDark]}>
+                Peso: {embarazada.peso}
+              </Text>
+            </View>
+
+            {embarazada.au != null && (
               <View style={styles.row}>
                 <Text style={[styles.text, darkTheme && styles.textDark]}>
-                  Peso: {embarazada.peso}
-                </Text>
-              </View>
-            )}
-            {embarazada.presionArterial && (
-              <View style={styles.row}>
-                <Text style={[styles.text, darkTheme && styles.textDark]}>
-                  PA: {embarazada.presionArterial}
-                </Text>
-              </View>
-            )}
-            {embarazada.alturaUterina && (
-              <View style={styles.row}>
-                <Text style={[styles.text, darkTheme && styles.textDark]}>
-                  Alt. uterina: {embarazada.alturaUterina}
-                </Text>
-              </View>
-            )}
-            {embarazada.fechaPartoProbable && (
-              <View style={styles.row}>
-                <Text style={[styles.text, darkTheme && styles.textDark]}>
-                  FPP: {embarazada.fechaPartoProbable}
-                </Text>
-              </View>
-            )}
-            {embarazada.observaciones && (
-              <View style={styles.row}>
-                <Text style={[styles.text, darkTheme && styles.textDark]}>
-                  Obs: {embarazada.observaciones}
+                  Alt. uterina: {embarazada.au}
                 </Text>
               </View>
             )}

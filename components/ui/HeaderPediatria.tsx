@@ -141,7 +141,7 @@ export default function Header({
                     )}
                 </Animated.View>
                 {/* Botón de cambio de tema */}
-                <View style={styles.themeButtonContainer}>
+                {/* <View style={styles.themeButtonContainer}>
                     <Animated.View
                         style={[
                             styles.themeButton,
@@ -163,7 +163,7 @@ export default function Header({
                             <Ionicons name={darkTheme ? 'sunny' : 'moon'} size={24} color={darkTheme ? '#fff' : '#000'} />
                         </TouchableOpacity>
                     </Animated.View>
-                </View>
+                </View> */}
             </View>
         </TouchableWithoutFeedback>
     );
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
-        backgroundColor: '#f8fafc',
+        backgroundColor: '#fff',
     },
     containerDark: {
         backgroundColor: 'rgba(0, 0, 0, 0.4)',

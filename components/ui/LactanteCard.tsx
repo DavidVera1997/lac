@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 
-export default function LactanteCard({ lactante, darkTheme }) {
+export default function LactanteCard({ lactante, darkTheme }: { lactante: any, darkTheme: any }) {
   const [isExpanded, setIsExpanded] = useState(false); // Estado de expansión
   const [scaleValue] = useState(new Animated.Value(1)); // Animación de escalado
 

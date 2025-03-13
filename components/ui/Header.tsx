@@ -11,6 +11,7 @@ import {
   Vibration,
   TouchableWithoutFeedback,
   Keyboard,
+  useColorScheme,
 } from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 
@@ -27,6 +28,7 @@ export default function Header({
 }: HeaderProps): JSX.Element {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
+  const theme = useColorScheme();
 
   // Valores animados para las animaciones.
   const searchScale = useRef(new Animated.Value(1)).current;
@@ -112,10 +114,10 @@ export default function Header({
         handleBlur();
       }}
     >
-      <View style={[styles.container, darkTheme && styles.containerDark]}>
+      <View style={[styles.container, theme == 'dark' && styles.containerDark]}>
         {/* Título */}
-        <Animated.Text style={[styles.title, { opacity: fadeAnim }, darkTheme && styles.titleDark]}>
-          Pediatría
+        <Animated.Text style={[styles.title, { opacity: fadeAnim }, theme == 'dark' && styles.titleDark]}>
+          Inicio
         </Animated.Text>
         {/* Texto de ayuda */}
         <Animated.Text style={[styles.tipText, { opacity: tipFadeAnim }]}>
@@ -123,11 +125,11 @@ export default function Header({
         </Animated.Text>
         {/* Barra de búsqueda */}
         <Animated.View
-          style={[styles.searchContainer, { transform: [{ scale: searchScale }] }, darkTheme && styles.searchContainerDark]}
+          style={[styles.searchContainer, { transform: [{ scale: searchScale }] }, theme == 'dark' && styles.searchContainerDark]}
         >
           <Ionicons name="search" size={20} color="#64748b" style={styles.searchIcon} />
           <TextInput
-            style={[styles.input, darkTheme && styles.inputDark, isFocused && styles.inputFocused]}
+            style={[styles.input, theme == 'dark' && styles.inputDark, isFocused && styles.inputFocused]}
             placeholder="Buscar..."
             placeholderTextColor="#64748b"
             value={searchText}
@@ -142,11 +144,11 @@ export default function Header({
           )}
         </Animated.View>
         {/* Botón de cambio de tema */}
-        <View style={styles.themeButtonContainer}>
+        {/* <View style={styles.themeButtonContainer}>
           <Animated.View
             style={[
               styles.themeButton,
-              darkTheme && styles.themeButtonDark,
+              theme == 'dark' && styles.themeButtonDark,
               {
                 transform: [
                   { scale: scaleAnim },
@@ -161,10 +163,10 @@ export default function Header({
             ]}
           >
             <TouchableOpacity onPress={handleThemeToggle}>
-              <Ionicons name={darkTheme ? 'sunny' : 'moon'} size={24} color={darkTheme ? '#fff' : '#000'} />
+              <Ionicons name={theme == 'dark' ? 'sunny' : 'moon'} size={24} color={theme == 'dark' ? '#fff' : '#000'} />
             </TouchableOpacity>
           </Animated.View>
-        </View>
+        </View> */}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#fff',
   },
   containerDark: {
     backgroundColor: 'rgba(0, 0, 0, 0.4)',

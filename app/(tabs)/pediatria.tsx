@@ -5,14 +5,16 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
+    Text,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Header from '@/components/ui/Header';
+import HeaderPediatria from '@/components/ui/HeaderPediatria';
 import LactanteCard from '@/components/ui/LactanteCard';
 import MedicationCalculator from '@/components/ui/MedicationCalculator';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import NuevoLactanteForm from '@/components/forms/NuevoLactanteForm';
+import { useColorScheme } from 'react-native';
 
 // Define la interfaz para los datos de un lactante
 interface Lactante {
@@ -25,11 +27,11 @@ interface Lactante {
     percentilPesoTalla: number;
     percentilTallaEdad: number;
     percentilPesoEdad: number;
-    vacunas: number;
+    vacunas: string[];
     telefono: string;
     ultimoCtrl: string;
     proximoCtrl: string;
-    genero: string;
+    sexo: string;
     consultorio: string;
     grupoRiesgo: number;
     tipoAlimentacion: string;
@@ -41,6 +43,7 @@ export default function HomeScreen(): JSX.Element {
     const [darkTheme, setDarkTheme] = useState<boolean>(false); // Tema oscuro
     const [modalVisible, setModalVisible] = useState<boolean>(false); // Estado del modal
     const [lactantes, setLactantes] = useState<Lactante[]>([]); // Lista de lactantes en estado
+    let themeApp = useColorScheme()
 
     // Función para guardar un nuevo lactante
     const handleSaveLactante = (nuevoLactante: Lactante): void => {
@@ -49,34 +52,38 @@ export default function HomeScreen(): JSX.Element {
 
     // Renderiza un LactanteCard
     const renderLactante = ({ item }: { item: Lactante }): JSX.Element => (
-        <LactanteCard lactante={item} darkTheme={darkTheme} />
+        <LactanteCard lactante={item} darkTheme={themeApp === 'dark' ? true : false} />
     );
 
+    const toggleTheme = () => setDarkTheme(!darkTheme);
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
-            <SafeAreaView style={[styles.container, darkTheme && styles.containerDark]}>
+            <SafeAreaView style={[themeApp === 'dark' ? styles.containerDark : styles.container,]}>
                 {/* Header del componente */}
-                <Header setBusqueda={setBusqueda} darkTheme={darkTheme} />
+                <HeaderPediatria setBusqueda={setBusqueda} darkTheme={themeApp === 'dark' ? true : false} toggleTheme={toggleTheme} />
 
                 {/* Lista de lactantes */}
-                <ScrollView style={{ flex: 1 }}>
-                    <FlatList
+                <View style={{ flex: 1 }}>
+                    {lactantes.length === 0 ? (
+                        <Text style={themeApp === 'dark' ? styles.messageDark : styles.message}>No existen lactantes...</Text>
+                    ) : <FlatList
                         data={lactantes.filter((lactante) =>
                             (lactante.nombreCompleto?.toLowerCase() || '').includes(busqueda.toLowerCase()) // Usa nombreCompleto
                         )}
                         keyExtractor={(item, index) => `${item.nombreCompleto}-${index}`} // Clave única más confiable
                         renderItem={renderLactante}
                         contentContainerStyle={styles.lactantesList}
-                    />
+                    />}
+
                     <MedicationCalculator />
-                </ScrollView>
+                </View>
 
                 {/* Botón flotante para agregar un nuevo lactante */}
                 <TouchableOpacity
                     style={styles.fab}
                     onPress={() => setModalVisible(true)}
                 >
-                    <Icon name="add" size={24} color={darkTheme ? '#000' : '#fff'} />
+                    <Icon name="add" size={24} color={themeApp === 'dark' ? '#000' : '#fff'} />
                 </TouchableOpacity>
 
                 {/* Formulario para agregar lactantes */}
@@ -93,10 +100,11 @@ export default function HomeScreen(): JSX.Element {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#fff',
     },
     containerDark: {
         backgroundColor: '#000',
+        flex: 1
     },
     lactantesList: {
         paddingHorizontal: 20,
@@ -117,9 +125,18 @@ const styles = StyleSheet.create({
     fabIcon: {
         color: '#fff',
     },
+    messageDark: {
+        textAlign: 'center',
+        marginTop: 20,
+        fontSize: 25,
+        color: '#64748b',
+    },
+    message: {
+        textAlign: 'center',
+        marginTop: 20,
+        fontSize: 25,
+        color: '#64748b',
+    },
 });
 
-
-
-export default HomeScreen;
 

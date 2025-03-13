@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView, StatusBar, ScrollView, TextInput, Animated, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView, StatusBar, ScrollView, TextInput, Animated, Platform, Keyboard, TouchableWithoutFeedback, useColorScheme } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Pdf from 'react-native-pdf';
 import Libro from '../Libro';
@@ -100,29 +100,29 @@ export default function Biblioteca() {
       ]).start();
     }
   };
-
+  let themeApp = useColorScheme()
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={themeApp === 'dark' ? styles.safeAreaDark : styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
+        <View style={themeApp === 'dark' ? styles.containerDark : styles.container}>
           {/* Header */}
-          <View style={styles.headerContainer}>
+          <View style={themeApp === 'dark' ? styles.headerContainerDark : styles.headerContainer}>
             {/* Título animado */}
-            <Animated.Text style={[styles.headerTitle, { opacity: fadeAnim }]}>
+            <Animated.Text style={[themeApp === 'dark' ? styles.headerTitleDark : styles.headerTitle, { opacity: fadeAnim }]}>
               Biblioteca Médica
             </Animated.Text>
             {/* Texto de ayuda */}
-            <Animated.Text style={[styles.searchTip, { opacity: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }]}>
+            <Animated.Text style={[themeApp === 'dark' ? styles.searchTipDark : styles.searchTip, { opacity: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }]}>
               Escribe el título del libro...
             </Animated.Text>
             {/* Barra de búsqueda */}
-            <Animated.View style={[styles.searchContainer, { transform: [{ scale: searchScale }] }]}>
-              <Ionicons name="search" size={20} color="#64748b" style={styles.searchIcon} />
+            <Animated.View style={[themeApp === 'dark' ? styles.searchContainerDark : styles.searchContainer, { transform: [{ scale: searchScale }] }]}>
+              <Ionicons name="search" size={20} style={themeApp === 'dark' ? styles.searchIconDark : styles.searchIcon} />
               <TextInput
-                style={styles.searchInput}
+                style={themeApp === 'dark' ? styles.searchInputDark : styles.searchInput}
                 placeholder="Buscar libros..."
-                placeholderTextColor="#64748b"
+                placeholderTextColor={themeApp === 'dark' ? "#64748b" : "#64748b"}
                 value={searchQuery}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
@@ -206,11 +206,21 @@ const CARD_WIDTH = (width - 80) / 2; // Reducción del tamaño de las tarjetas
 
 const styles = StyleSheet.create({
   safeArea: {
-    flex: 1,
-    backgroundColor: '#f8fafc', // Fondo claro
+    // flex: 1,
+    height: '100%',
+    backgroundColor: '#fff', // Fondo claro
+  },
+  safeAreaDark: {
+    // flex: 1,
+    height: '100%',
+    backgroundColor: '#000', // Fondo claro
   },
   container: {
-    flex: 1,
+    backgroundColor: '#fff'
+  },
+  containerDark: {
+    backgroundColor: "#000",
+    // height: '100 %'
   },
   headerContainer: {
     paddingTop: Platform.OS === 'ios' ? 70 : StatusBar.currentHeight || 30,
@@ -218,7 +228,15 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    backgroundColor: '#f8fafc', // Fondo claro
+    backgroundColor: '#fff', // Fondo claro
+  },
+  headerContainerDark: {
+    paddingTop: Platform.OS === 'ios' ? 70 : StatusBar.currentHeight || 30,
+    paddingHorizontal: 20,
+    paddingBottom: 15,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    backgroundColor: '#000', // Fondo claro
   },
   headerTitle: {
     fontSize: 32,
@@ -227,9 +245,22 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
+  headerTitleDark: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#fff', // Color igual al de "Pediatría"
+    marginBottom: 10,
+    textAlign: 'center',
+  },
   searchTip: {
     fontSize: 14,
     color: '#64748b',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  searchTipDark: {
+    fontSize: 14,
+    color: '#fff',
     textAlign: 'center',
     marginBottom: 10,
   },
@@ -246,13 +277,36 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
+  searchContainerDark: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
   searchIcon: {
     marginRight: 10,
+    color: '#64748b'
+  },
+  searchIconDark: {
+    marginRight: 10,
+    color: '#64748b'
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
     color: '#334155',
+  },
+  searchInputDark: {
+    flex: 1,
+    fontSize: 16,
+    color: '#fff',
   },
   clearButton: {
     padding: 5,
@@ -260,6 +314,7 @@ const styles = StyleSheet.create({
   categoriesScrollContent: {
     paddingHorizontal: 15,
     marginTop: 10,
+    // height: 35,
   },
   categoryButton: {
     paddingHorizontal: 16,

@@ -1,8 +1,8 @@
 import { Tabs } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import Animated, {
+import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
@@ -13,6 +13,11 @@ import {
   Ionicons,
   MaterialCommunityIcons,
 } from '@expo/vector-icons';
+import { View } from 'react-native';
+import { StatusBar } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { Vibration } from 'react-native';
+import { Animated } from 'react-native';
 
 // Definir los props para el componente AnimatedIcon
 interface AnimatedIconProps {
@@ -50,16 +55,17 @@ function AnimatedIcon({
   );
 }
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
-  return (
+export default function TabLayout() {
+  let themeApp = useColorScheme()
+  return (<>
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#6a0dad',
         tabBarInactiveTintColor: '#555',
         tabBarStyle: [
+          { backgroundColor: themeApp === 'dark' ? '#000' : '#fff' },
           styles.footer,
           Platform.select({
             ios: { position: 'absolute' },
@@ -144,6 +150,8 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+  </>
+
   );
 }
 
@@ -153,7 +161,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 8,
     paddingHorizontal: 10,
-    backgroundColor: '#fff',
     borderTopWidth: 0,
     borderTopColor: '#eee',
     elevation: 10,

@@ -11,6 +11,7 @@ import {
   Vibration,
   TouchableWithoutFeedback,
   Keyboard,
+  useColorScheme,
 } from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 
@@ -108,6 +109,7 @@ export default function EmbarazadaHeader({
     [setBusqueda]
   );
 
+  let themeApp = useColorScheme()
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -115,9 +117,9 @@ export default function EmbarazadaHeader({
         handleBlur();
       }}
     >
-      <View style={[styles.container, darkTheme && styles.containerDark]}>
+      <View style={[styles.container, themeApp === 'dark' && styles.containerDark]}>
         {/* Título */}
-        <Animated.Text style={[styles.title, { opacity: fadeAnim }, darkTheme && styles.titleDark]}>
+        <Animated.Text style={[styles.title, { opacity: fadeAnim }, themeApp === "dark" && styles.titleDark]}>
           Obstetricia
         </Animated.Text>
         {/* Texto de ayuda */}
@@ -129,12 +131,12 @@ export default function EmbarazadaHeader({
           style={[
             styles.searchContainer,
             { transform: [{ scale: searchScale }] },
-            darkTheme && styles.searchContainerDark,
+            themeApp === 'dark' && styles.searchContainerDark,
           ]}
         >
           <Ionicons name="search" size={20} color="#64748b" style={styles.searchIcon} />
           <TextInput
-            style={[styles.input, darkTheme && styles.inputDark, isFocused && styles.inputFocused]}
+            style={[styles.input, themeApp === 'dark' && styles.inputDark, isFocused && styles.inputFocused]}
             placeholder="Buscar..."
             placeholderTextColor="#64748b"
             value={searchText}
@@ -149,7 +151,7 @@ export default function EmbarazadaHeader({
           )}
         </Animated.View>
         {/* Botón de cambio de tema */}
-        <View style={styles.themeButtonContainer}>
+        {/* <View style={styles.themeButtonContainer}>
           <Animated.View
             style={[
               styles.themeButton,
@@ -171,7 +173,7 @@ export default function EmbarazadaHeader({
               <Ionicons name={darkTheme ? 'sunny' : 'moon'} size={24} color={darkTheme ? '#fff' : '#000'} />
             </TouchableOpacity>
           </Animated.View>
-        </View>
+        </View> */}
       </View>
     </TouchableWithoutFeedback>
   );

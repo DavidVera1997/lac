@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { useColorScheme } from 'react-native';
 
 // Definición de tipos
 interface Medication {
@@ -361,20 +362,24 @@ export default function MedicationCalculator() {
 
     return explanation;
   };
-
+  let themeApp = useColorScheme()
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Dosis Pediátricas</Text>
+    <View style={themeApp === 'dark' ? styles.containerDark : styles.container}>
+      <Text style={themeApp === 'dark' ? styles.titleDark : styles.title}>Dosis Pediátricas</Text>
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Selecciona el Medicamento:</Text>
+        <Text style={themeApp === 'dark' ? styles.labeldark : styles.label}>Selecciona el Medicamento:</Text>
         <Picker
           selectedValue={selectedMedication}
-          style={styles.picker}
+          style={themeApp === 'dark' ? {
+            backgroundColor: '#000'
+          } : styles.picker}
+          dropdownIconColor={themeApp === 'dark' ? '#fff' : '#000'}
           onValueChange={(itemValue: string) => setSelectedMedication(itemValue)}
         >
-          <Picker.Item label="-- Selecciona el Medicamento --" value="" />
+          <Picker.Item label="-- Selecciona el Medicamento --" value="" style={themeApp === 'dark' && { color: '#fff', backgroundColor: '#000' }} />
           {Object.keys(medicationDosage).map((medication) => (
             <Picker.Item
+              style={themeApp === 'dark' ? { color: '#fff', backgroundColor: '#000' } : { color: '#000' }}
               key={medication}
               label={`${medicationDosage[medication].name} (${medicationDosage[medication].presentation})`}
               value={medication}
@@ -383,11 +388,12 @@ export default function MedicationCalculator() {
         </Picker>
       </View>
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Peso (kg):</Text>
+        <Text style={themeApp === 'dark' ? styles.labeldark : styles.label}>Peso (kg):</Text>
         <TextInput
-          style={styles.input}
+          style={themeApp === 'dark' ? styles.inputDark : styles.input}
           keyboardType="numeric"
           placeholder="Peso en kg"
+          placeholderTextColor={themeApp === 'dark' ? '#fff' : '#000'}
           value={weight}
           onChangeText={setWeight}
         />
@@ -396,21 +402,23 @@ export default function MedicationCalculator() {
         <Text style={styles.buttonText}>Calcular Dosis</Text>
       </TouchableOpacity>
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      {result ? (
-        <View style={styles.resultContainer}>
-          <Text style={styles.result}>
-            {result.split('\n').map((line, index) => (
-              <Text key={index}>
-                {line}
-                {'\n'}
-              </Text>
-            ))}
-          </Text>
-          <TouchableOpacity onPress={() => setIsModalVisible(true)} style={styles.helpIcon}>
-            <Text style={styles.helpIconText}>?</Text>
-          </TouchableOpacity>
-        </View>
-      ) : null}
+      {
+        result ? (
+          <View style={styles.resultContainer}>
+            <Text style={styles.result}>
+              {result.split('\n').map((line, index) => (
+                <Text key={index}>
+                  {line}
+                  {'\n'}
+                </Text>
+              ))}
+            </Text>
+            <TouchableOpacity onPress={() => setIsModalVisible(true)} style={styles.helpIcon}>
+              <Text style={styles.helpIconText}>?</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null
+      }
       {info ? <Text style={styles.info}>{info}</Text> : null}
 
       {/* Modal */}
@@ -425,7 +433,7 @@ export default function MedicationCalculator() {
           </View>
         </View>
       </Modal>
-    </View>
+    </View >
   );
 }
 
@@ -437,10 +445,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
+  containerDark: {
+    flex: 1,
+    backgroundColor: '#000',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#4a148c',
+    marginBottom: 20,
+  },
+  titleDark: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
     marginBottom: 20,
   },
   inputGroup: {
@@ -451,6 +472,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     color: '#333',
+  },
+  labeldark: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#fff',
   },
   picker: {
     width: '100%',
@@ -463,6 +489,15 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     backgroundColor: '#f9f9f9',
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    fontSize: 16,
+  },
+  inputDark: {
+    width: '100%',
+    backgroundColor: '#000',
     padding: 10,
     borderRadius: 8,
     borderWidth: 1,
